@@ -87,7 +87,7 @@ var relatorios = {
 
     },
   	
-  	renderizaTabela: ()=>{
+  	montaObjInfo: ()=>{
         //recuperando informações das audiências do dia
         data_aud = JSON.parse(localStorage.getItem("audiencias_dia"))
         
@@ -126,11 +126,13 @@ var relatorios = {
                   juiza: info_ata_por_id.signatario
               }
               j++;
-
           }
-
         });
     
+    },
+    renderizaTabela: ()=>{
+
+      
     }
     
 
