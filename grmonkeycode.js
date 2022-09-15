@@ -66,10 +66,8 @@ var relatorios = {
       }).then(function (data) {
         console.log(data);
 
-        var info_ata_por_id = data;
-
         localStorage.setItem("info_ata", JSON.stringify(data));
-        console.log("dados recuperados do localstorage....");
+        console.log("dados de cada ata...");
 
         console.log(JSON.parse(localStorage.getItem("info_ata")));
 
@@ -89,17 +87,14 @@ var relatorios = {
       //recuperando informações das audiências do dia
       data_aud = JSON.parse(localStorage.getItem("audiencias_dia"));
 
-      //recuperando informações ata por ata
-      JSON.parse(localStorage.getItem("info_ata"));
-
-
+      
 
       /*varre  o objeto que contem as audiências do dia
       e mostra o idProcesso e idDocumento = id da Ata
   
       */
       viewObj = []; //objeto onde armazenaremos o resultado do filtro
-      j = 0;
+      
       data_aud.pautasDoDia.forEach(async function (data, i) {
         //somente apresenta os horários em que houve audiência
         if (data.idProcesso) {
@@ -112,25 +107,34 @@ var relatorios = {
           //ele salva as informações no local storage
           //salva também em uma variável global (info_ata_por_id) para
           //facilitar a consulta e melhorar a performance
-          await filtraIdProcesso_IdAta(data.idProcesso, data.idDocumento);
+          await relatorios.filtraIdProcesso_IdAta(data.idProcesso, data.idDocumento);
+          console.log("montando viwobj...")
+          console.log(JSON.parse(localStorage.getItem("info_ata")))
+          
+          info_ata_por_id = await JSON.parse(localStorage.getItem("info_ata"));
 
           //recuperando informações sobre a ata
           //salvas na variável info_ata_por_id
-          viewObj[j] = {
+          viewObj.push({
             idProcesso: data.idProcesso,
             idAta: data.idDocumento,
             criador: info_ata_por_id.criador,
             juiza: info_ata_por_id.signatario
-          };
-          j++;
+          });
+          console.log("viewOBJ - conteúdo");
+          console.log(viewObj);
+          
         }
       });
-
+      console.log(`VIEW COMPLETO ***** ${viewObj}`)
+			localStorage.setItem("viewObj", JSON.stringify(viewObj));
 
     },
     renderizaTabela: ()=>{
+      
+      viewObj = JSON.parse(localStorage.getItem("viewObj"))
 
-      tabela = `
+      var header = `
       <table>
       <tr>
         <th id="idProcesso">idProcesso</th>
@@ -138,9 +142,10 @@ var relatorios = {
         <th id="criador">criador</th>
         <th id="juiza">juiza</th>
       </tr>`;
+      var corpo = '';
 
       viewObj.forEach(data => {
-        tabela += `<tr>
+        var corpo = corpo + `<tr>
         <td>${data.idProcesso}</td>
         <td>${data.idAta}</td>
         <td>${data.criador}</td>
@@ -148,8 +153,9 @@ var relatorios = {
         </tr>`
       });
 
-      tabela += `<table>`
-
+      var tabela = `${header} ${corpo} </table>`
+      
+      localStorage.setItem("tabela", JSON.stringify(tabela));
 
 
 
@@ -176,8 +182,20 @@ setTimeout(function () {
   	
   	//evento executado ao clicar no botão gerar relatório
     button = document.getElementById("btRelatorio");
-    button.addEventListener('click', ()=>{
-    	relatorios.mensal();
+    button.addEventListener('click', async ()=>{
+    	await relatorios.mensal();
+      await relatorios.montaObjInfo();
+      await relatorios.renderizaTabela();
+      
+      // gambiarra, encontrar solução mais elegante
+      setTimeout(function () {
+      
+      	console.log("******************* HTML ******************")
+      	console.log(JSON.parse(localStorage.getItem("tabela")));
+      },2000);
+      
+      
+      
       
     })
   
