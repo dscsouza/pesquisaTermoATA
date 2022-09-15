@@ -92,7 +92,44 @@ var relatorios = {
         data_aud = JSON.parse(localStorage.getItem("audiencias_dia"))
         
         //recuperando informações ata por ata
-        JSON.parse(localStorage.getItem("info_ata"))
+        JSON.parse(localStorage.getItem("info_ata"));
+
+
+
+        /*varre  o objeto que contem as audiências do dia
+        e mostra o idProcesso e idDocumento = id da Ata
+
+        */
+        viewObj = []; //objeto onde armazenaremos o resultado do filtro
+        j = 0;
+        data_aud.pautasDoDia.forEach((data,i) => {
+          //somente apresenta os horários em que houve audiência
+          if (data.idProcesso) {
+              console.log(data.pautaAudienciaHorario.horaInicial)
+              console.log(data.idProcesso);
+              console.log(data.idDocumento);
+
+              // pega a informação da ata
+              // aqui queremos o criador da ata e a juíza
+              //ele salva as informações no local storage
+              //salva também em uma variável global para
+              //facilitar a consulta e melhorar a performance
+              filtraIdProcesso_IdAta(data.idProcesso, data.idDocumento);
+
+              //recuperando informações sobre a ata
+              //salvas na variável info_ata_por_id
+
+              viewObj[j] ={
+                  idProcesso: data.idProcesso,
+                  idAta: data.idDocumento,
+                  criador: info_ata_por_id.criador,
+                  juiza: info_ata_por_id.signatario
+              }
+              j++;
+
+          }
+
+        });
     
     }
     
