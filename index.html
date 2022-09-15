@@ -12,6 +12,28 @@
     <h1>PESQUISA TERMO</h1>
     <p class="rodape">Desenvolvido por</p>
 
+
+    <!-- idProcesso: data.idProcesso,
+                  idAta: data.idDocumento,
+                  criador: info_ata_por_id.criador,
+                  juiza: info_ata_por_id.signatario -->
+
+    <table>
+      <tr>
+        <th id="idProcesso">idProcesso</th>
+        <th id="idAta">idAta</th>
+        <th id="criador">criador</th>
+        <th id="juiza">juiza</th>
+      </tr>
+      <tr>
+        <td>${data.idProcesso}</td>
+        <td>${data.idAta}</td>
+        <td>${data.criador}</td>
+        <td>${data.juiza}</td>
+      </tr>
+      
+    </table>
+
  
 
 
@@ -24,7 +46,10 @@
         TESTE.pautasDoDia.forEach((data,i) => {
             //somente apresenta os horários em que houve audiência
             if (data.idProcesso) {
-                console.log(i);
+                
+              
+              
+              console.log(i);
 
                 console.log(data.pautaAudienciaHorario.horaInicial)
                 console.log(data.idProcesso);
@@ -33,6 +58,9 @@
             
         });
         console.log(TESTE.pautasDoDia)
+
+
+        
 
 
         //url que trás as informações da ata

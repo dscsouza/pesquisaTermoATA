@@ -132,7 +132,30 @@ var relatorios = {
     },
     renderizaTabela: ()=>{
 
+      tabela = `
+      <table>
+      <tr>
+        <th id="idProcesso">idProcesso</th>
+        <th id="idAta">idAta</th>
+        <th id="criador">criador</th>
+        <th id="juiza">juiza</th>
+      </tr>`;
+
+      viewObj.forEach(data => {
+        tabela += `<tr>
+        <td>${data.idProcesso}</td>
+        <td>${data.idAta}</td>
+        <td>${data.criador}</td>
+        <td>${data.juiza}</td>
+        </tr>`
+      });
+
+      tabela += `<table>`
+
       
+
+
+
     }
     
 
