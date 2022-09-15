@@ -88,7 +88,11 @@ var relatorios = {
     },
   	
   	renderizaTabela: ()=>{
-      
+        //recuperando informações das audiências do dia
+        data_aud = JSON.parse(localStorage.getItem("audiencias_dia"))
+        
+        //recuperando informações ata por ata
+        JSON.parse(localStorage.getItem("info_ata"))
     
     }
     
