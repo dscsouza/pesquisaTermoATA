@@ -164,32 +164,32 @@ var relatorios = {
 		
 		},
   
-  	adiada: (idProcesso, idAta) =>{
-      
-           
-      
+  	adiada: async function (idProcesso, idAta) {
+
+
+
       await fetch("https://pje.trt11.jus.br/pje-comum-api/api/processos/id/" + idProcesso + "/audiencias?canceladas=true").then(function (response) {
         return response.json();
       }).then(function (data) {
-        	console.log(data);     
-        	audIndex = 0;
-          totalAud = 0;
-        	data.forEach((aud, i) = > {
-            
-            totalAud = i;
-            
-            if (aud.idDocumento == idAta){
-              audIndex = i
-            }          
-            
-          }).then((d)=>{
-            if (totalAud > audIndex){
-              return "adiada"
-          	}
-          
-          });
-         	
-        	console.log("verificando se a audiência foi adiada");
+        console.log(data);
+        audIndex = 0;
+        totalAud = 0;
+        data.forEach((aud, i) => {
+
+          totalAud = i;
+
+          if (aud.idDocumento == idAta) {
+            audIndex = i;
+          }
+
+        }).then((d) => {
+          if (totalAud > audIndex) {
+            return "adiada";
+          }
+
+        });
+
+        console.log("verificando se a audiência foi adiada");
 
 
         /*
@@ -198,10 +198,6 @@ var relatorios = {
       }).catch(function () {
         console.log('Booo');
       });
-
-      
-      
-    
     }
     
 
