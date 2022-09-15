@@ -59,30 +59,28 @@ var relatorios = {
             });
 
     },
-    filtraIdProcesso_IdAta: (idprocesso, idata)=>{
+    filtraIdProcesso_IdAta: async function (idprocesso, idata) {
 
-        fetch("https://pje.trt11.jus.br/pje-comum-api/api/processos/id/" + idprocesso + "/documentos/id/" + idata + "?incluirAssinatura=false&incluirAnexos=false").then(function(response) {
-                return response.json();
-            }).then(function(data) {
-                console.log(data)
-                
-                var info_ata_por_id = data;
-          
-          			localStorage.setItem("info_ata",JSON.stringify(data));
-              	console.log("dados recuperados do localstorage....")
-              
-              	console.log(JSON.parse(localStorage.getItem("info_ata")));
-                            
+      fetch("https://pje.trt11.jus.br/pje-comum-api/api/processos/id/" + idprocesso + "/documentos/id/" + idata + "?incluirAssinatura=false&incluirAnexos=false").then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        console.log(data);
 
-                /*
-                a ideia é usar essa requisição para pegar o criador da ata e a juíza que assinou
+        var info_ata_por_id = data;
 
-                */
+        localStorage.setItem("info_ata", JSON.stringify(data));
+        console.log("dados recuperados do localstorage....");
+
+        console.log(JSON.parse(localStorage.getItem("info_ata")));
 
 
-            }).catch(function() {
-                console.log('Booo');
-            });
+        /*
+        a ideia é usar essa requisição para pegar o criador da ata e a juíza que assinou
+
+        */
+      }).catch(function () {
+        console.log('Booo');
+      });
 
 
     },
@@ -112,9 +110,9 @@ var relatorios = {
               // pega a informação da ata
               // aqui queremos o criador da ata e a juíza
               //ele salva as informações no local storage
-              //salva também em uma variável global para
+              //salva também em uma variável global (info_ata_por_id) para
               //facilitar a consulta e melhorar a performance
-              filtraIdProcesso_IdAta(data.idProcesso, data.idDocumento);
+              await filtraIdProcesso_IdAta(data.idProcesso, data.idDocumento);
 
               //recuperando informações sobre a ata
               //salvas na variável info_ata_por_id
@@ -128,6 +126,7 @@ var relatorios = {
               j++;
           }
         });
+
     
     },
     renderizaTabela: ()=>{
@@ -152,7 +151,7 @@ var relatorios = {
 
       tabela += `<table>`
 
-      
+
 
 
 
