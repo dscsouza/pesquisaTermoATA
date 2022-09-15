@@ -114,9 +114,6 @@ var relatorios = {
             juiza: info_ata_por_id.signatario,
             adiada: ""
           });
-          adiou="X"
-          //console.log("viewOBJ - conteúdo");
-          //console.log(viewObj);
           await localStorage.setItem("viewObj", JSON.stringify(viewObj));
           
         }
@@ -169,57 +166,63 @@ var relatorios = {
 		
 		},
   
-  	adiada: function () {
+  	adiada: async function () {
 
-			relatFinal = await JSON.parse(localStorage.getItem("viewObj"))
-      
-      
-      
-      await relatFinal.forEach(function (rel) {
-        
-        
-        
-        
-      link = `https://pje.trt11.jus.br/pje-comum-api/api/processos/id/${rel.idProcesso}/audiencias?canceladas=true`
-      
-	 		audIndex = 20;
-      totalAud = 0;
-      
-      fetch(link).then(function (response) {
-        return response.json();
-      }).then(function (data) {
+          objPrincipal = JSON.parse(localStorage.getItem("viewObj"))
+          console.log(objPrincipal.length)
+          //até aqui OK
           
-          if (data.idDocumento == rel.idAta) {
-            audIndex = totalAud;
-          }
+          for (let index = 0; index < objPrincipal.length; index++) {
+            
 
-        
-        
-        	if (totalAud > audIndex) {
-            rel.adiada = "SIM"
-          }
-        
-        totalAud++;
+            link = `https://pje.trt11.jus.br/pje-comum-api/api/processos/id/${objPrincipal[index].idProcesso}/audiencias?canceladas=true`
+            console.log(link)
+            await fetch(link)
+                .then(function (response) {return response.json()})
+                .then(function (data, i) { 
+                      //rotina ao pegar os dados
+                      todas = []
+                      data.forEach(aud => {
+
+                        //retorna o id de cada ata das audiências marcadas
+                        todas.push(aud.idDocumento)
+                        
+                      });
+
+                      console.log(todas)
+                      //até aqui está correto
+                      final = todas.length - 1;
+
+                      
+                      try {
+                        console.log(todas[final])
+                        console.log(objPrincipal[index].idAta)
+                        if (todas[final] != objPrincipal[index].idAta){
+                          
+                          objPrincipal[index].adiada = "adiada"
+                        } 
+                      } catch (error) {
+                        // bloco de tratamento do erro
+                        console.log(error);
+                      } 
+
+                      
 
 
-        
-      }).catch(function (err) {
-        console.log('Erro ao verificar se a audiência foi adiada');
-        console.log(err);
-      });
-      
-        
-        
-        
-        
-        
-        
-        
-      });
-      
-    }
+
+
+
+                  
+                }).catch((err)=>{
+                    console.log(err)
+
+                })
     
+          }
+          await localStorage.setItem("viewObj", JSON.stringify(objPrincipal));
 
+          
+    }
 }
 
 
@@ -244,7 +247,10 @@ setTimeout(function () {
     	await relatorios.mensal();
       await relatorios.montaObjInfo();
       await relatorios.adiada();
+      
       await relatorios.renderizaTabela();
+
+      
       
       // gambiarra, encontrar solução mais elegante
       setTimeout(async function () {
