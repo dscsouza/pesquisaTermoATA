@@ -43,10 +43,11 @@ var relatorios = {
             }).then(function(data) {
                 console.log(data)
                 var atas_dia = data;
-                console.log(atas_dia)
-                localStorage.setItem("audiencias_dia", atas_dia)
-
-                // acho que aqui temos que usar o stringfy
+                localStorage.setItem("audiencias_dia",JSON.stringify(data));
+              	console.log("dados recuperados do localstorage....")
+              
+              	console.log(JSON.parse(localStorage.getItem("audiencias_dia")));
+                            
 
                 /*
                 a ideia é usar essa requisição para pegar o idProcesso e idDocumento (id da ata)
@@ -66,6 +67,12 @@ var relatorios = {
                 console.log(data)
                 
                 var info_ata_por_id = data;
+          
+          			localStorage.setItem("info_ata",JSON.stringify(data));
+              	console.log("dados recuperados do localstorage....")
+              
+              	console.log(JSON.parse(localStorage.getItem("info_ata")));
+                            
 
                 /*
                 a ideia é usar essa requisição para pegar o criador da ata e a juíza que assinou
@@ -78,6 +85,11 @@ var relatorios = {
             });
 
 
+    },
+  	
+  	renderizaTabela: ()=>{
+      
+    
     }
     
 
@@ -102,6 +114,7 @@ setTimeout(function () {
     button = document.getElementById("btRelatorio");
     button.addEventListener('click', ()=>{
     	relatorios.mensal();
+      
     })
   
   	//evento executado ao alterar a dataInicial
