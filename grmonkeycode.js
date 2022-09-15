@@ -43,6 +43,16 @@ var relatorios = {
             }).then(function(data) {
                 console.log(data)
                 var atas_dia = data;
+                console.log(atas_dia)
+                localStorage.setItem("audiencias_dia", atas_dia)
+
+                // acho que aqui temos que usar o stringfy
+
+                /*
+                a ideia é usar essa requisição para pegar o idProcesso e idDocumento (id da ata)
+
+                */
+
             }).catch(function() {
                 console.log('Booo');
             });
@@ -56,6 +66,11 @@ var relatorios = {
                 console.log(data)
                 
                 var info_ata_por_id = data;
+
+                /*
+                a ideia é usar essa requisição para pegar o criador da ata e a juíza que assinou
+
+                */
 
 
             }).catch(function() {
