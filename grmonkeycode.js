@@ -4,6 +4,33 @@
 // @grant    none
 // ==/UserScript==
 
+/*
+variáveis importantes
+
+atas_dia >>> RETORNA UM OBJETO CONTENDO AS ATAS DE UM REFERIDO DIA
+Exemplo:
+atas_dia.pautasDoDia.forEach((data,i) => {
+            //somente apresenta os horários em que houve audiência
+            if (data.idProcesso) {
+                console.log(i);
+
+                console.log(data.pautaAudienciaHorario.horaInicial)
+                console.log(data.idProcesso);
+                console.log(data.idDocumento);
+            }
+            
+        });
+
+
+
+
+info_ata_por_id >>> retorna informações sobre uma ata específica, tendo sido passados como parâmetros idProcesso e idDocumento, id da Ata, obtidos no atas_dia
+
+
+
+*/
+
+
 
 console.log("Script de relatórios ativado. Executando em alguns segundos...")
 
@@ -14,14 +41,33 @@ var relatorios = {
             fetch("https://pje.trt11.jus.br/pje-comum-api/api/pautasaudiencias/classificacoes/dia?idSalaAudiencia=17&data=" + dataInicial).then(function(response) {
                 return response.json();
             }).then(function(data) {
-                console.log(data);
+                console.log(data)
+                var atas_dia = data;
             }).catch(function() {
                 console.log('Booo');
             });
 
+    },
+    filtraIdProcesso_IdAta: (idprocesso, idata)=>{
+
+        fetch("https://pje.trt11.jus.br/pje-comum-api/api/processos/id/" + idprocesso + "/documentos/id/" + idata + "?incluirAssinatura=false&incluirAnexos=false").then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data)
+                
+                var info_ata_por_id = data;
+
+
+            }).catch(function() {
+                console.log('Booo');
+            });
+
+
     }
+    
 
 }
+
 
 
 
