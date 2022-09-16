@@ -118,12 +118,34 @@ var relatorios = {
           
         }
       });
-      console.log(`VIEW COMPLETO ***** ${viewObj}`)
+      
 			
 
     },
     renderizaTabela: async function () {
       
+      
+      //verifica filtro juízas
+      filtro = document.getElementById("filtro").value
+      nomeJuiza = ''
+      switch (filtro) {
+        case 't':
+          nomeJuiza = 'Todas';
+          break;
+        case 'st':
+          nomeJuiza = 'STELLA LITAIFF ISPER ABRAHIM';
+          break;
+        
+        case 'ss':
+          nomeJuiza = 'SANDRA DI MAULO';
+          break;
+      
+        default:
+          nomeJuiza = 'Todas';
+          break;
+      }
+      
+      // rotina de renderização da tabela
       relatFinal = await JSON.parse(localStorage.getItem("viewObj"))
 
       var header = `
@@ -140,13 +162,27 @@ var relatorios = {
       await relatFinal.forEach(function (data) {
         //console.log("dados no forEach")
         //console.log(data)
-        corpo = corpo + `<tr>
-        <td class="centralizado td-class ng-star-inserted">${data.idProcesso}</td>
-        <td class="centralizado td-class ng-star-inserted"><a href="https://pje.trt11.jus.br/pje-comum-api/api/processos/id/${data.idProcesso}/documentos/id/${data.idAta}/conteudo?incluirCapa=false&incluirAssinatura=true">${data.idAta}</a></td>
-        <td class="centralizado td-class ng-star-inserted">${data.criador}</td>
-        <td class="centralizado td-class ng-star-inserted">${data.juiza}</td>
-				<td class="centralizado td-class ng-star-inserted">${data.adiada}</td>
-        </tr>`
+        if (data.juiza == nomeJuiza){
+          corpo = corpo + `<tr>
+          <td class="centralizado td-class ng-star-inserted">${data.idProcesso}</td>
+          <td class="centralizado td-class ng-star-inserted"><a href="https://pje.trt11.jus.br/pje-comum-api/api/processos/id/${data.idProcesso}/documentos/id/${data.idAta}/conteudo?incluirCapa=false&incluirAssinatura=true">${data.idAta}</a></td>
+          <td class="centralizado td-class ng-star-inserted">${data.criador}</td>
+          <td class="centralizado td-class ng-star-inserted">${data.juiza}</td>
+          <td class="centralizado td-class ng-star-inserted">${data.adiada}</td>
+          </tr>`
+        }
+
+        if (nomeJuiza == 'Todas'){
+          corpo = corpo + `<tr>
+          <td class="centralizado td-class ng-star-inserted">${data.idProcesso}</td>
+          <td class="centralizado td-class ng-star-inserted"><a href="https://pje.trt11.jus.br/pje-comum-api/api/processos/id/${data.idProcesso}/documentos/id/${data.idAta}/conteudo?incluirCapa=false&incluirAssinatura=true">${data.idAta}</a></td>
+          <td class="centralizado td-class ng-star-inserted">${data.criador}</td>
+          <td class="centralizado td-class ng-star-inserted">${data.juiza}</td>
+          <td class="centralizado td-class ng-star-inserted">${data.adiada}</td>
+          </tr>`
+        }
+
+
       });
 
       var tabela = `${header} ${corpo} </table>`
@@ -222,6 +258,39 @@ var relatorios = {
           await localStorage.setItem("viewObj", JSON.stringify(objPrincipal));
 
           
+    },
+  	renderizaFiltro: async function () {
+      
+      relatFinal = await JSON.parse(localStorage.getItem("viewObj"))
+
+      var header = `
+      <table class="t-class">
+      <tr>
+        <th id="idProcesso" class="th-class centralizado ng-star-inserted">idProcesso</th>
+        <th id="idAta" class="th-class centralizado ng-star-inserted">idAta</th>
+        <th id="criador" class="th-class centralizado ng-star-inserted">criador</th>
+        <th id="juiza" class="th-class centralizado ng-star-inserted">juiza</th>
+				<th id="juiza" class="th-class centralizado ng-star-inserted">Adiada</th>
+      </tr>`;
+      var corpo = '';
+
+      await relatFinal.forEach(function (data) {
+        //console.log("dados no forEach")
+        //console.log(data)
+        corpo = corpo + `<tr>
+        <td class="centralizado td-class ng-star-inserted">${data.idProcesso}</td>
+        <td class="centralizado td-class ng-star-inserted"><a href="https://pje.trt11.jus.br/pje-comum-api/api/processos/id/${data.idProcesso}/documentos/id/${data.idAta}/conteudo?incluirCapa=false&incluirAssinatura=true" target="_blank">${data.idAta}</a></td>
+        <td class="centralizado td-class ng-star-inserted">${data.criador}</td>
+        <td class="centralizado td-class ng-star-inserted">${data.juiza}</td>
+				<td class="centralizado td-class ng-star-inserted">${data.adiada}</td>
+        </tr>`
+      });
+
+      var tabela = `${header} ${corpo} </table>`
+      
+      await localStorage.setItem("tabela", tabela);
+
+
     }
 }
 
@@ -236,7 +305,7 @@ setTimeout(function () {
     botaoExecutar = document.getElementById("cdk-drop-list-0");
     console.log(botaoExecutar);
     filho = document.createElement("tr");
-    filho.innerHTML = "<br><input type='date' id='dataRelatorio'><br><button id='btRelatorio'>Gerar Relatório</button>";
+    filho.innerHTML = "<h4 style='textalign:center'>Relatório de Audiências Adiadas</h4>Juíza<select id='filtro'><option value='t'>Todas</option><option value='st' selected>STELLA LITAIFF ISPER ABRAHIM</option><option value='ss'>SANDRA DI MAULO</option></select><br>Data: <input type='date' id='dataRelatorio'><br><button id='btRelatorio' class='bt-primary'>Gerar Relatório</button>";
     botaoExecutar.appendChild(filho);
   
   	
@@ -263,10 +332,11 @@ setTimeout(function () {
      		filhoTabela = document.createElement("table");
     		filhoTabela.innerHTML = tabela;
     		framePje.appendChild(filhoTabela);
+        localStorage.clear();
         
         
         
-      },1000);
+      },500);
       
       
       
@@ -283,4 +353,4 @@ setTimeout(function () {
   
   
 
-}, 2000);
+}, 3000);
